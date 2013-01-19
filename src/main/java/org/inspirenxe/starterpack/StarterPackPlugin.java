@@ -42,7 +42,7 @@ import org.spout.vanilla.plugin.component.inventory.PlayerInventory;
 import org.spout.vanilla.plugin.material.VanillaMaterials;
 
 public class StarterPackPlugin extends CommonPlugin implements Listener {
-	public static final DefaultedKey<Boolean> JOINED_BEFORE = new DefaultedKeyImpl<Boolean>("starterpack_joined_before", false);
+	private static final DefaultedKey<Boolean> JOINED_BEFORE = new DefaultedKeyImpl<Boolean>("starterpack_joined_before", false);
 
 	@Override
 	public void onEnable() {
@@ -72,12 +72,13 @@ public class StarterPackPlugin extends CommonPlugin implements Listener {
 			return;
 		}
 
-		player.getData().put(JOINED_BEFORE, true);
 		PlayerInventory inv = player.get(PlayerInventory.class);
 
 		if (inv == null) {
 			return;
 		}
+
+		player.getData().put(JOINED_BEFORE, true);
 
 		if (!inv.getMain().contains(VanillaMaterials.WOODEN_SWORD) && !inv.getQuickbar().contains(VanillaMaterials.WOODEN_SWORD)) {
 			inv.add(new ItemStack(VanillaMaterials.WOODEN_SWORD, 1));
