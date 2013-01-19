@@ -1,0 +1,11 @@
+name: ${project.name}
+version: ${buildNumber}
+description: ${project.description}
+
+author: ${project.organization.name}
+website: ${project.organization.url}
+
+main: ${mainClass}
+load: postworld
+platform: Server
+depends: [Vanilla]
