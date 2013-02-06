@@ -26,33 +26,52 @@
  */
 package org.inspirenxe.starterpack;
 
+import java.io.File;
+
+import org.spout.api.Spout;
 import org.spout.api.chat.ChatArguments;
 import org.spout.api.chat.style.ChatStyle;
-import org.spout.api.entity.Player;
-import org.spout.api.event.EventHandler;
-import org.spout.api.event.Listener;
-import org.spout.api.event.player.PlayerJoinEvent;
-import org.spout.api.inventory.ItemStack;
-import org.spout.api.map.DefaultedKey;
-import org.spout.api.map.DefaultedKeyImpl;
+import org.spout.api.exception.ConfigurationException;
 import org.spout.api.plugin.CommonPlugin;
 import org.spout.api.plugin.PluginLogger;
+import org.spout.api.util.config.yaml.YamlConfiguration;
 
-import org.spout.vanilla.plugin.component.inventory.PlayerInventory;
-import org.spout.vanilla.plugin.material.VanillaMaterials;
-
-public class StarterPackPlugin extends CommonPlugin implements Listener {
-	private static final DefaultedKey<Boolean> JOINED_BEFORE = new DefaultedKeyImpl<Boolean>("starterpack_joined_before", false);
+public class StarterPackPlugin extends CommonPlugin {
+	private YamlConfiguration config;
+	private YamlConfiguration users;
 
 	@Override
 	public void onEnable() {
-		getEngine().getEventManager().registerEvents(this, this);
+		config = new YamlConfiguration(new File(getDataFolder(), "config.yml"));
+		users = new YamlConfiguration(new File(getDataFolder(), "users.yml"));
+
+		try {
+			// If the config.yml doesn't exist then create it
+			if (!new File(getDataFolder(), "config.yml").exists()) {
+				createConfig();
+			} else {
+				// Load config.yml
+				config.load();
+			}
+
+			// If the users.yml doesn't exist then create it
+			if (!new File(getDataFolder(), "users.yml").exists()) {
+				createUsers();
+			} else {
+				// Load users.yml
+				users.load();
+			}
+		} catch (ConfigurationException e) {
+			getLogger().severe("Go nag Grinch:\n" + e);
+		}
+
+		Spout.getEventManager().registerEvents(new StarterPackListener(this), this);
 		getLogger().info(getDescription().getVersion() + " enabled.");
 	}
 
 	@Override
 	public void onDisable() {
-		getLogger().info("disabled.");
+		getLogger().info(getDescription().getVersion() + " disabled.");
 	}
 
 	@Override
@@ -64,35 +83,24 @@ public class StarterPackPlugin extends CommonPlugin implements Listener {
 		return ((PluginLogger) getLogger()).getTag();
 	}
 
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+	public YamlConfiguration getUsers() {
+		return users;
+	}
 
-		if (player.getData().get(JOINED_BEFORE)) {
-			return;
-		}
+	public YamlConfiguration getConfig() {
+		return config;
+	}
 
-		PlayerInventory inv = player.get(PlayerInventory.class);
+	public void createConfig() throws ConfigurationException {
+		config.load();
+		config.addNode("pack_obtained_message").setValue("Enjoy your starter pack!");
+		config.addNode("pack");
+		config.save();
+	}
 
-		if (inv == null) {
-			return;
-		}
-
-		player.getData().put(JOINED_BEFORE, true);
-
-		if (!inv.getMain().contains(VanillaMaterials.WOODEN_SWORD) && !inv.getQuickbar().contains(VanillaMaterials.WOODEN_SWORD)) {
-			inv.add(new ItemStack(VanillaMaterials.WOODEN_SWORD, 1));
-		}
-		if (!inv.getMain().contains(VanillaMaterials.WOODEN_PICKAXE) && !inv.getQuickbar().contains(VanillaMaterials.WOODEN_PICKAXE)) {
-			inv.add(new ItemStack(VanillaMaterials.WOODEN_PICKAXE, 1));
-		}
-		if (!inv.getMain().contains(VanillaMaterials.WOODEN_AXE) && !inv.getQuickbar().contains(VanillaMaterials.WOODEN_AXE)) {
-			inv.add(new ItemStack(VanillaMaterials.WOODEN_AXE, 1));
-		}
-		if (!inv.getMain().contains(VanillaMaterials.WOODEN_HOE) && !inv.getQuickbar().contains(VanillaMaterials.WOODEN_HOE)) {
-			inv.add(new ItemStack(VanillaMaterials.WOODEN_HOE, 1));
-		}
-
-		player.sendMessage(new ChatArguments(getPrefix(), ChatStyle.CYAN, "Enjoy your starter pack!"));
+	public void createUsers() throws ConfigurationException {
+		users.load();
+		users.addNode("users");
+		users.save();
 	}
 }
