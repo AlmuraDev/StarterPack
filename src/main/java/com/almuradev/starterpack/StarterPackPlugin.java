@@ -1,7 +1,7 @@
 /*
  * This file is part of StarterPack.
  *
- * © 2013 InspireNXE <http://www.inspirenxe.org/>
+ * © 2013 AlmuraDev <http://www.almuradev.com/>
  * StarterPack is licensed under the Spout License Version 1.
  *
  * StarterPack is free software: you can redistribute it and/or modify it under
@@ -24,7 +24,7 @@
  * License and see <http://spout.in/licensev1> for the full license, including
  * the MIT license.
  */
-package org.inspirenxe.starterpack;
+package com.almuradev.starterpack;
 
 import java.io.File;
 

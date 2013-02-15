@@ -1,7 +1,7 @@
 /*
  * This file is part of StarterPack.
  *
- * © 2013 InspireNXE <http://www.inspirenxe.org/>
+ * © 2013 AlmuraDev <http://www.almuradev.com/>
  * StarterPack is licensed under the Spout License Version 1.
  *
  * StarterPack is free software: you can redistribute it and/or modify it under
@@ -24,7 +24,7 @@
  * License and see <http://spout.in/licensev1> for the full license, including
  * the MIT license.
  */
-package org.inspirenxe.starterpack;
+package com.almuradev.starterpack;
 
 import java.io.File;
 import java.util.List;
@@ -41,7 +41,7 @@ import org.spout.api.inventory.ItemStack;
 import org.spout.api.material.Material;
 import org.spout.api.material.MaterialRegistry;
 
-import org.spout.vanilla.plugin.component.inventory.PlayerInventory;
+import org.spout.vanilla.plugin.component.inventory.PlayerInventoryComponent;
 
 public class StarterPackListener implements Listener {
 	private final StarterPackPlugin plugin;
@@ -97,7 +97,7 @@ public class StarterPackListener implements Listener {
 			}
 
 			// Makes sure the joining player has an inventory
-			PlayerInventory inv = player.get(PlayerInventory.class);
+			PlayerInventoryComponent inv = player.get(PlayerInventoryComponent.class);
 			if (inv == null) {
 				return;
 			}
@@ -114,7 +114,7 @@ public class StarterPackListener implements Listener {
 
 				// Finally add the item
 				int amount = plugin.getConfig().getNode("pack." + itemId + ".amount").getInt();
-				player.get(PlayerInventory.class).add(new ItemStack(mat, amount).limitStackSize());
+				player.get(PlayerInventoryComponent.class).add(new ItemStack(mat, amount).limitStackSize());
 			}
 
 			// Send them the message
