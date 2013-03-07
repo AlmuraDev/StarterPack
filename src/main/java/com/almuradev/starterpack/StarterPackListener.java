@@ -41,7 +41,7 @@ import org.spout.api.inventory.ItemStack;
 import org.spout.api.material.Material;
 import org.spout.api.material.MaterialRegistry;
 
-import org.spout.vanilla.plugin.component.inventory.PlayerInventoryComponent;
+import org.spout.vanilla.component.entity.inventory.PlayerInventory;
 
 public class StarterPackListener implements Listener {
 	private final StarterPackPlugin plugin;
@@ -97,7 +97,7 @@ public class StarterPackListener implements Listener {
 			}
 
 			// Makes sure the joining player has an inventory
-			PlayerInventoryComponent inv = player.get(PlayerInventoryComponent.class);
+			PlayerInventory inv = player.get(PlayerInventory.class);
 			if (inv == null) {
 				return;
 			}
@@ -114,7 +114,7 @@ public class StarterPackListener implements Listener {
 
 				// Finally add the item
 				int amount = plugin.getConfig().getNode("pack." + itemId + ".amount").getInt();
-				player.get(PlayerInventoryComponent.class).add(new ItemStack(mat, amount).limitStackSize());
+				player.get(PlayerInventory.class).add(new ItemStack(mat, amount).limitStackSize());
 			}
 
 			// Send them the message
